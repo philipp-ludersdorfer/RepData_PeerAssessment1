@@ -205,16 +205,8 @@ hr {
 
 <h2>Loading and preprocessing the data</h2>
 
-<pre><code class="r">activity &lt;- read.csv(unzip(&quot;activity.zip&quot;), stringsAsFactors=FALSE)
-</code></pre>
-
-<pre><code>## Warning in unzip(&quot;activity.zip&quot;): error 1 in extracting from zip file
-</code></pre>
-
-<pre><code>## Error in file(file, &quot;rt&quot;): invalid &#39;description&#39; argument
-</code></pre>
-
-<pre><code class="r">activity$date &lt;- as.Date(activity$date,&quot;%Y-%m-%d&quot;)
+<pre><code class="r">activity &lt;- read.csv(&quot;activity.csv&quot;, stringsAsFactors=FALSE)
+activity$date &lt;- as.Date(activity$date,&quot;%Y-%m-%d&quot;)
 head(activity)
 </code></pre>
 
@@ -258,7 +250,7 @@ text(as.numeric(highint),200,pos=4,&quot;Interval with the highest number of ste
 
 <h2>Imputing missing values</h2>
 
-<p>I have chosen to impute all NAs with the mean for that interval. </p>
+<p>I have chosen to impute all NAs with the mean for the corresponding interval. </p>
 
 <pre><code class="r">noNA &lt;- sum(is.na(activity$steps))
 newActivity &lt;- activity %&gt;% 

@@ -6,18 +6,7 @@
 ## Loading and preprocessing the data
 
 ```r
-activity <- read.csv(unzip("activity.zip"), stringsAsFactors=FALSE)
-```
-
-```
-## Warning in unzip("activity.zip"): error 1 in extracting from zip file
-```
-
-```
-## Error in file(file, "rt"): invalid 'description' argument
-```
-
-```r
+activity <- read.csv("activity.csv", stringsAsFactors=FALSE)
 activity$date <- as.Date(activity$date,"%Y-%m-%d")
 head(activity)
 ```
@@ -67,7 +56,7 @@ text(as.numeric(highint),200,pos=4,"Interval with the highest number of steps",c
 Interval number **835** has the highest average daily number of steps (206).
 
 ## Imputing missing values
-I have chosen to impute all NAs with the mean for that interval. 
+I have chosen to impute all NAs with the mean for the corresponding interval. 
 
 
 ```r
