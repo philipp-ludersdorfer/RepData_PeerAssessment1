@@ -7,6 +7,17 @@
 
 ```r
 activity <- read.csv(unzip("activity.zip"), stringsAsFactors=FALSE)
+```
+
+```
+## Warning in unzip("activity.zip"): error 1 in extracting from zip file
+```
+
+```
+## Error in file(file, "rt"): invalid 'description' argument
+```
+
+```r
 activity$date <- as.Date(activity$date,"%Y-%m-%d")
 head(activity)
 ```
@@ -29,8 +40,8 @@ head(activity)
 stepsperday <- by(activity$steps,activity$date,sum)
 meansteps <- mean(stepsperday,na.rm=TRUE)
 mediansteps <- median(stepsperday,na.rm=TRUE)
-hist(stepsperday,breaks=30,xlab="Number of steps per day",main = "Histogram of total steps per day",
-     col=rgb(0.094,0.455,0.804))
+hist(stepsperday,breaks=30,xlab="Number of steps per day",
+     main = "Histogram of total steps per day", col=rgb(0.094,0.455,0.804))
 abline(v=meansteps,lwd=2)
 text(meansteps,10,pos=4,"Mean")
 ```
@@ -45,17 +56,19 @@ of steps per day is **10765**.
 
 ```r
 meansteps = by(activity$steps,activity$interval,mean,na.rm=TRUE)
-highint <- which.max(meansteps)
-plot(meansteps,type="l",lwd=2,xlab="Interval",ylab="Steps",main="Average daily steps per interval")
-abline(v=which.max(meansteps),col=rgb(0.094,0.455,0.804),lwd=2)
-text(highint,200,pos=4,"Interval with the highest number of steps",col=rgb(0.094,0.455,0.804))
+highint <- names(which.max(meansteps))
+plot(names(meansteps),meansteps,type="l",lwd=2,xlab="Interval",ylab="Steps",main="Average daily steps per interval")
+abline(v=as.numeric(highint),col=rgb(0.094,0.455,0.804),lwd=2)
+text(as.numeric(highint),200,pos=4,"Interval with the highest number of steps",col=rgb(0.094,0.455,0.804))
 ```
 
 ![plot of chunk StepsPerInterval](figure/StepsPerInterval-1.png)
 
-Interval number **104** has the highest average daily number of steps (206).
+Interval number **835** has the highest average daily number of steps (206).
 
 ## Imputing missing values
+I have chosen to impute all NAs with the mean for that interval. 
+
 
 ```r
 noNA <- sum(is.na(activity$steps))
@@ -80,9 +93,9 @@ of steps per day is 10762. These values do not differ significantly from the mea
 ## Are there differences in activity patterns between weekdays and weekends?
 
 ```r
-newActivity$dayofweek <- factor(ifelse(weekdays(newActivity$date) %in% c("Saturday","Sunday"),"Weekend","Weekday"))
-meanActivity <- newActivity %>% group_by(dayofweek,interval) %>%
-    summarise(steps = mean(steps))
+newActivity$dayofweek <- factor(ifelse(weekdays(newActivity$date) %in% 
+                                           c("Saturday","Sunday"),"Weekend","Weekday"))
+meanActivity <- newActivity %>% group_by(dayofweek,interval) %>% summarise(steps = mean(steps))
 xyplot(steps~interval|dayofweek,data = meanActivity,type="l",lwd=2,col="black", xlab="Interval",
        ylab="Number of Steps", par.settings=list(strip.background=list(col=rgb(0.094,0.455,0.804,0.8))),
        layout=c(1,2))
